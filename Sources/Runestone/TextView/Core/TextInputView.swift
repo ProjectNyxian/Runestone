@@ -23,7 +23,7 @@ protocol TextInputViewDelegate: AnyObject {
 // swiftlint:disable:next type_body_length
 public class TextInputView: UIView, UITextInput {
     // MARK: - UITextInput
-    var selectedTextRange: UITextRange? {
+    public var selectedTextRange: UITextRange? {
         get {
             if let range = _selectedRange {
                 return IndexedRange(range)
@@ -68,7 +68,7 @@ public class TextInputView: UIView, UITextInput {
             }
         }
     }
-    private(set) var markedTextRange: UITextRange? {
+    private(set) public var markedTextRange: UITextRange? {
         get {
             if let markedRange = markedRange {
                 return IndexedRange(markedRange)
@@ -80,33 +80,33 @@ public class TextInputView: UIView, UITextInput {
             markedRange = (newValue as? IndexedRange)?.range.nonNegativeLength
         }
     }
-    var markedTextStyle: [NSAttributedString.Key: Any]?
-    var beginningOfDocument: UITextPosition {
+    public var markedTextStyle: [NSAttributedString.Key: Any]?
+    public var beginningOfDocument: UITextPosition {
         IndexedPosition(index: 0)
     }
-    var endOfDocument: UITextPosition {
+    public var endOfDocument: UITextPosition {
         IndexedPosition(index: string.length)
     }
-    weak var inputDelegate: UITextInputDelegate?
-    var hasText: Bool {
+    weak public var inputDelegate: UITextInputDelegate?
+    public var hasText: Bool {
         string.length > 0
     }
-    var tokenizer: UITextInputTokenizer {
+    public var tokenizer: UITextInputTokenizer {
         customTokenizer
     }
     private lazy var customTokenizer = TextInputStringTokenizer(textInput: self,
                                                                 stringView: stringView,
                                                                 lineManager: lineManager,
                                                                 lineControllerStorage: lineControllerStorage)
-    var autocorrectionType: UITextAutocorrectionType = .default
-    var autocapitalizationType: UITextAutocapitalizationType = .sentences
-    var smartQuotesType: UITextSmartQuotesType = .default
-    var smartDashesType: UITextSmartDashesType = .default
-    var smartInsertDeleteType: UITextSmartInsertDeleteType = .default
-    var spellCheckingType: UITextSpellCheckingType = .default
-    var keyboardType: UIKeyboardType = .default
-    var keyboardAppearance: UIKeyboardAppearance = .default
-    var returnKeyType: UIReturnKeyType = .default
+    public var autocorrectionType: UITextAutocorrectionType = .default
+    public var autocapitalizationType: UITextAutocapitalizationType = .sentences
+    public var smartQuotesType: UITextSmartQuotesType = .default
+    public var smartDashesType: UITextSmartDashesType = .default
+    public var smartInsertDeleteType: UITextSmartInsertDeleteType = .default
+    public var spellCheckingType: UITextSpellCheckingType = .default
+    public var keyboardType: UIKeyboardType = .default
+    public var keyboardAppearance: UIKeyboardAppearance = .default
+    public var returnKeyType: UIReturnKeyType = .default
     @objc var insertionPointColor: UIColor = .label {
         didSet {
             if insertionPointColor != oldValue {
@@ -135,7 +135,7 @@ public class TextInputView: UIView, UITextInput {
             }
         }
     }
-    override var undoManager: UndoManager? {
+    public override var undoManager: UndoManager? {
         timedUndoManager
     }
 
@@ -502,7 +502,7 @@ public class TextInputView: UIView, UITextInput {
             }
         }
     }
-    override var canBecomeFirstResponder: Bool {
+    public override var canBecomeFirstResponder: Bool {
         true
     }
     weak var gutterParentView: UIView? {
@@ -520,7 +520,7 @@ public class TextInputView: UIView, UITextInput {
             }
         }
     }
-    var gutterContainerView: UIView {
+    public var gutterContainerView: UIView {
         layoutManager.gutterContainerView
     }
     private(set) var stringView = StringView() {
@@ -570,7 +570,7 @@ public class TextInputView: UIView, UITextInput {
     }
     private let lineControllerFactory: LineControllerFactory
     private let lineControllerStorage: LineControllerStorage
-    private let layoutManager: LayoutManager
+    internal let layoutManager: LayoutManager
     private let timedUndoManager = TimedUndoManager()
     private let indentController: IndentController
     private let lineMovementController: LineMovementController
@@ -663,7 +663,7 @@ public class TextInputView: UIView, UITextInput {
         setupGutterWidthObserver()
     }
 
-    override func becomeFirstResponder() -> Bool {
+    public override func becomeFirstResponder() -> Bool {
         if canBecomeFirstResponder {
             delegate?.textInputViewWillBeginEditing(self)
         }
@@ -681,7 +681,7 @@ public class TextInputView: UIView, UITextInput {
         return didBecomeFirstResponder
     }
 
-    override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
         let didResignFirstResponder = super.resignFirstResponder()
         if didResignFirstResponder {
             delegate?.textInputViewDidEndEditing(self)
@@ -693,7 +693,7 @@ public class TextInputView: UIView, UITextInput {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         hasDeletedTextWithPendingLayoutSubviews = false
         layoutManager.layoutIfNeeded()
@@ -712,13 +712,13 @@ public class TextInputView: UIView, UITextInput {
         }
     }
 
-    override func copy(_ sender: Any?) {
+    public override func copy(_ sender: Any?) {
         if let selectedTextRange = selectedTextRange, let text = text(in: selectedTextRange) {
             UIPasteboard.general.string = text
         }
     }
 
-    override func paste(_ sender: Any?) {
+    public override func paste(_ sender: Any?) {
         if let selectedTextRange = selectedTextRange, let string = UIPasteboard.general.string {
             inputDelegate?.selectionWillChange(self)
             let preparedText = prepareTextForInsertion(string)
@@ -727,14 +727,14 @@ public class TextInputView: UIView, UITextInput {
         }
     }
 
-    override func cut(_ sender: Any?) {
+    public override func cut(_ sender: Any?) {
         if let selectedTextRange = selectedTextRange, let text = text(in: selectedTextRange) {
             UIPasteboard.general.string = text
             replace(selectedTextRange, withText: "")
         }
     }
 
-    override func selectAll(_ sender: Any?) {
+    public override func selectAll(_ sender: Any?) {
         notifyInputDelegateAboutSelectionChangeInLayoutSubviews = true
         selectedRange = NSRange(location: 0, length: string.length)
     }
@@ -751,7 +751,7 @@ public class TextInputView: UIView, UITextInput {
         }
     }
 
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    public override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if action == #selector(copy(_:)) {
             if let selectedTextRange = selectedTextRange {
                 return !selectedTextRange.isEmpty
@@ -885,7 +885,7 @@ public class TextInputView: UIView, UITextInput {
         layoutManager.redisplayVisibleLines()
     }
 
-    override func didMoveToWindow() {
+    public override func didMoveToWindow() {
         super.didMoveToWindow()
         if hasPendingFullLayout && window != nil {
             hasPendingFullLayout = false
@@ -893,7 +893,7 @@ public class TextInputView: UIView, UITextInput {
         }
     }
 
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         // We end our current undo group when the user touches the view.
         let result = super.hitTest(point, with: event)
         if result === self {
@@ -902,7 +902,7 @@ public class TextInputView: UIView, UITextInput {
         return result
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             invalidateLines()
@@ -910,7 +910,7 @@ public class TextInputView: UIView, UITextInput {
         }
     }
 
-    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+    public override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         super.pressesEnded(presses, with: event)
         if let keyCode = presses.first?.key?.keyCode, presses.count == 1 {
             if markedRange != nil {
@@ -1033,7 +1033,7 @@ private extension TextInputView {
 
 // MARK: - Floating Caret
 extension TextInputView {
-    func beginFloatingCursor(at point: CGPoint) {
+    public func beginFloatingCursor(at point: CGPoint) {
         if floatingCaretView == nil, let position = closestPosition(to: point) {
             insertionPointColorBeforeFloatingBegan = insertionPointColor
             insertionPointColor = insertionPointColorBeforeFloatingBegan.withAlphaComponent(0.5)
@@ -1049,7 +1049,7 @@ extension TextInputView {
         }
     }
 
-    func updateFloatingCursor(at point: CGPoint) {
+    public func updateFloatingCursor(at point: CGPoint) {
         if let floatingCaretView = floatingCaretView {
             let caretSize = floatingCaretView.frame.size
             let caretOrigin = CGPoint(x: point.x - caretSize.width / 2, y: point.y - caretSize.height / 2)
@@ -1057,7 +1057,7 @@ extension TextInputView {
         }
     }
 
-    func endFloatingCursor() {
+    public func endFloatingCursor() {
         insertionPointColor = insertionPointColorBeforeFloatingBegan
         updateCaretColor()
         floatingCaretView?.removeFromSuperview()
@@ -1076,7 +1076,7 @@ extension TextInputView {
 
 // MARK: - Rects
 extension TextInputView {
-    func caretRect(for position: UITextPosition) -> CGRect {
+    public func caretRect(for position: UITextPosition) -> CGRect {
         guard let indexedPosition = position as? IndexedPosition else {
             fatalError("Expected position to be of type \(IndexedPosition.self)")
         }
@@ -1087,7 +1087,7 @@ extension TextInputView {
         caretRectService.caretRect(at: location, allowMovingCaretToNextLineFragment: true)
     }
 
-    func firstRect(for range: UITextRange) -> CGRect {
+    public func firstRect(for range: UITextRange) -> CGRect {
         guard let indexedRange = range as? IndexedRange else {
             fatalError("Expected range to be of type \(IndexedRange.self)")
         }
@@ -1097,7 +1097,7 @@ extension TextInputView {
 
 // MARK: - Editing
 extension TextInputView {
-    func insertText(_ text: String) {
+    public func insertText(_ text: String) {
         let preparedText = prepareTextForInsertion(text)
         isRestoringPreviouslyDeletedText = hasDeletedTextWithPendingLayoutSubviews
         hasDeletedTextWithPendingLayoutSubviews = false
@@ -1126,7 +1126,7 @@ extension TextInputView {
         }
     }
 
-    func deleteBackward() {
+    public func deleteBackward() {
         didCallDeleteBackward = true
         guard let selectedRange = markedRange ?? selectedRange, selectedRange.length > 0 else {
             return
@@ -1173,7 +1173,7 @@ extension TextInputView {
         delegate?.textInputViewDidChangeSelection(self)
     }
 
-    func replace(_ range: UITextRange, withText text: String) {
+    public func replace(_ range: UITextRange, withText text: String) {
         let preparedText = prepareTextForInsertion(text)
         if let indexedRange = range as? IndexedRange, shouldChangeText(in: indexedRange.range.nonNegativeLength, replacementText: preparedText) {
             replaceText(in: indexedRange.range.nonNegativeLength, with: preparedText)
@@ -1198,7 +1198,7 @@ extension TextInputView {
         }
     }
 
-    func text(in range: UITextRange) -> String? {
+    public func text(in range: UITextRange) -> String? {
         if let indexedRange = range as? IndexedRange {
             return text(in: indexedRange.range.nonNegativeLength)
         } else {
@@ -1331,7 +1331,7 @@ extension TextInputView {
 
 // MARK: - Selection
 extension TextInputView {
-    func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
+    public func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
         if let indexedRange = range as? IndexedRange {
             return selectionRectService.selectionRects(in: indexedRange.range.nonNegativeLength)
         } else {
@@ -1413,7 +1413,7 @@ extension TextInputView {
 
 // MARK: - Marking
 extension TextInputView {
-    func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+    public func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
         guard let range = markedRange ?? self.selectedRange else {
             return
         }
@@ -1431,7 +1431,7 @@ extension TextInputView {
         delegate?.textInputViewDidUpdateMarkedRange(self)
     }
 
-    func unmarkText() {
+    public func unmarkText() {
         inputDelegate?.selectionWillChange(self)
         markedRange = nil
         inputDelegate?.selectionDidChange(self)
@@ -1441,7 +1441,7 @@ extension TextInputView {
 
 // MARK: - Ranges and Positions
 extension TextInputView {
-    func position(within range: UITextRange, farthestIn direction: UITextLayoutDirection) -> UITextPosition? {
+    public func position(within range: UITextRange, farthestIn direction: UITextLayoutDirection) -> UITextPosition? {
         // This implementation seems to match the behavior of UITextView.
         guard let indexedRange = range as? IndexedRange else {
             return nil
@@ -1456,7 +1456,7 @@ extension TextInputView {
         }
     }
 
-    func position(from position: UITextPosition, in direction: UITextLayoutDirection, offset: Int) -> UITextPosition? {
+    public func position(from position: UITextPosition, in direction: UITextLayoutDirection, offset: Int) -> UITextPosition? {
         guard let indexedPosition = position as? IndexedPosition else {
             return nil
         }
@@ -1467,7 +1467,7 @@ extension TextInputView {
         return IndexedPosition(index: newLocation)
     }
 
-    func characterRange(byExtending position: UITextPosition, in direction: UITextLayoutDirection) -> UITextRange? {
+    public func characterRange(byExtending position: UITextPosition, in direction: UITextLayoutDirection) -> UITextRange? {
         // This implementation seems to match the behavior of UITextView.
         guard let indexedPosition = position as? IndexedPosition else {
             return nil
@@ -1484,7 +1484,7 @@ extension TextInputView {
         }
     }
 
-    func characterRange(at point: CGPoint) -> UITextRange? {
+    public func characterRange(at point: CGPoint) -> UITextRange? {
         guard let index = layoutManager.closestIndex(to: point) else {
             return nil
         }
@@ -1493,7 +1493,7 @@ extension TextInputView {
         return IndexedRange(range)
     }
 
-    func closestPosition(to point: CGPoint) -> UITextPosition? {
+    public func closestPosition(to point: CGPoint) -> UITextPosition? {
         if let index = layoutManager.closestIndex(to: point) {
             return IndexedPosition(index: index)
         } else {
@@ -1501,7 +1501,7 @@ extension TextInputView {
         }
     }
 
-    func closestPosition(to point: CGPoint, within range: UITextRange) -> UITextPosition? {
+    public func closestPosition(to point: CGPoint, within range: UITextRange) -> UITextPosition? {
         guard let indexedRange = range as? IndexedRange else {
             return nil
         }
@@ -1514,7 +1514,7 @@ extension TextInputView {
         return IndexedPosition(index: cappedIndex)
     }
 
-    func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
+    public func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
         guard let fromIndexedPosition = fromPosition as? IndexedPosition, let toIndexedPosition = toPosition as? IndexedPosition else {
             return nil
         }
@@ -1522,7 +1522,7 @@ extension TextInputView {
         return IndexedRange(range)
     }
 
-    func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
+    public func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
         guard let indexedPosition = position as? IndexedPosition else {
             return nil
         }
@@ -1533,7 +1533,7 @@ extension TextInputView {
         return IndexedPosition(index: newPosition)
     }
 
-    func compare(_ position: UITextPosition, to other: UITextPosition) -> ComparisonResult {
+    public func compare(_ position: UITextPosition, to other: UITextPosition) -> ComparisonResult {
         guard let indexedPosition = position as? IndexedPosition, let otherIndexedPosition = other as? IndexedPosition else {
             #if targetEnvironment(macCatalyst)
             // Mac Catalyst may pass <uninitialized> to `position`. I'm not sure what the right way to deal with that is but returning .orderedSame seems to work.
@@ -1551,7 +1551,7 @@ extension TextInputView {
         }
     }
 
-    func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int {
+    public func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int {
         if let fromPosition = from as? IndexedPosition, let toPosition = toPosition as? IndexedPosition {
             return toPosition.index - fromPosition.index
         } else {
@@ -1562,16 +1562,16 @@ extension TextInputView {
 
 // MARK: - Writing Direction
 extension TextInputView {
-    func baseWritingDirection(for position: UITextPosition, in direction: UITextStorageDirection) -> NSWritingDirection {
+    public func baseWritingDirection(for position: UITextPosition, in direction: UITextStorageDirection) -> NSWritingDirection {
         .natural
     }
 
-    func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {}
+    public func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {}
 }
 
 // MARK: - UIEditMenuInteraction
 extension TextInputView {
-    func editMenu(for textRange: UITextRange, suggestedActions: [UIMenuElement]) -> UIMenu? {
+    public func editMenu(for textRange: UITextRange, suggestedActions: [UIMenuElement]) -> UIMenu? {
         editMenuController.editMenu(for: textRange, suggestedActions: suggestedActions)
     }
 

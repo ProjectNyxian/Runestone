@@ -1520,5 +1520,31 @@ extension TextView: UITextInteractionDelegate {
             isPerformingNonEditableTextInteraction = false
         }
     }
+    
+    public func rectForLine(_ lineNumber: Int) -> CGRect? {
+        let index = lineNumber - 1
+        guard index >= 0,
+              index < self.textInputView.lineManager.lineCount
+        else {
+            return nil
+        }
+        
+        let targetLine = self.textInputView.lineManager.line(atRow: lineNumber - 1)
+        let endOffset = targetLine.location + targetLine.data.length
+        self.textInputView.layoutManager.layoutLines(toLocation: endOffset)
+        
+        let line = self.textInputView.lineManager.line(atRow: index)
+        
+        let minY = line.yPosition
+        let height = line.data.lineHeight
+        let inset = self.textInputView.textContainerInset
+        let width = self.textInputView.scrollViewWidth
+        
+        return CGRect(x: 0, y: inset.top + minY, width: width, height: height)
+    }
+    
+    public func getTextInputView() -> TextInputView? {        
+        return self.textInputView
+    }
 }
 // swiftlint:enable type_body_length
