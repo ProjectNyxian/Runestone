@@ -5,7 +5,7 @@ protocol LayoutManagerDelegate: AnyObject {
     func layoutManager(_ layoutManager: LayoutManager, didProposeContentOffsetAdjustment contentOffsetAdjustment: CGPoint)
 }
 
-final class LayoutManager {
+public class LayoutManager {
     weak var delegate: LayoutManagerDelegate?
     weak var gutterParentView: UIView? {
         didSet {

@@ -21,7 +21,7 @@ protocol TextInputViewDelegate: AnyObject {
 }
 
 // swiftlint:disable:next type_body_length
-final class TextInputView: UIView, UITextInput {
+public class TextInputView: UIView, UITextInput {
     // MARK: - UITextInput
     var selectedTextRange: UITextRange? {
         get {

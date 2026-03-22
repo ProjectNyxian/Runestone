@@ -17,7 +17,7 @@ extension DocumentLineNodeID: CustomDebugStringConvertible {
 typealias DocumentLineTree = RedBlackTree<DocumentLineNodeID, Int, DocumentLineNodeData>
 typealias DocumentLineNode = RedBlackTreeNode<DocumentLineNodeID, Int, DocumentLineNodeData>
 
-final class LineManager {
+public class LineManager {
     var stringView: StringView
     var lineCount: Int {
         documentLineTree.nodeTotalCount
