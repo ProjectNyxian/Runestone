@@ -914,7 +914,11 @@ public class TextInputView: UIView, UITextInput {
         super.pressesEnded(presses, with: event)
         if let keyCode = presses.first?.key?.keyCode, presses.count == 1 {
             if markedRange != nil {
-                handleKeyPressDuringMultistageTextInput(keyCode: keyCode)
+                if #available(iOS 13.4, *) {
+                    handleKeyPressDuringMultistageTextInput(keyCode: keyCode)
+                } else {
+                    // Fallback on earlier versions
+                }
             }
         }
     }
@@ -936,6 +940,7 @@ private extension TextInputView {
 
 // MARK: - Navigation
 private extension TextInputView {
+    @available(iOS 13.4, *)
     private func handleKeyPressDuringMultistageTextInput(keyCode: UIKeyboardHIDUsage) {
         // When editing multistage text input (that is, we have a marked text) we let the user unmark the text
         // by pressing the arrow keys or Escape. This isn't common in iOS apps but it's the default behavior
