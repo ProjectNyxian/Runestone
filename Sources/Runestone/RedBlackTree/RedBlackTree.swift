@@ -34,10 +34,6 @@ final class RedBlackTree<NodeID: RedBlackTreeNodeID, NodeValue: RedBlackTreeNode
     }
 
     func node(containingLocation location: NodeValue) -> Node? {
-        guard location >= minimumValue && location <= root.nodeTotalValue else {
-            print("OOB: location=\(location), min=\(minimumValue), max=\(root.nodeTotalValue), delta=\(location - root.nodeTotalValue)")
-            return nil
-        }
         return node(containingLocation: location, minimumValue: minimumValue, valueKeyPath: \.value, totalValueKeyPath: \.nodeTotalValue)
     }
 

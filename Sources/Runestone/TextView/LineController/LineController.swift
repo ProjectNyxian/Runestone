@@ -163,7 +163,11 @@ final class LineController {
     }
 
     func lineFragmentNode(containingCharacterAt location: Int) -> LineFragmentNode? {
-        lineFragmentTree.node(containingLocation: location)
+        guard lineFragmentTree.nodeTotalValue > 0,
+              location <= lineFragmentTree.nodeTotalValue else {
+            return nil
+        }
+        return lineFragmentTree.node(containingLocation: location)
     }
 
     func lineFragmentNode(atIndex index: Int) -> LineFragmentNode {
