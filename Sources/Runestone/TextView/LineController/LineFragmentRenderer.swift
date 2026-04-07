@@ -77,7 +77,7 @@ private extension LineFragmentRenderer {
         for i in 1 ... level {
             let charIndex = i * charsPerLevel
             guard charIndex < chars.count,
-                  chars[charIndex] == " " || chars[charIndex] == "\t" else {
+                  chars[charIndex] == "\t" else {
                 continue
             }
             let x = CTLineGetOffsetForStringIndex(lineFragment.line, charIndex, nil)
