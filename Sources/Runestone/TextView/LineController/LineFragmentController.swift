@@ -68,9 +68,9 @@ final class LineFragmentController {
 
     private let renderer: LineFragmentRenderer
 
-    init(lineFragment: LineFragment, invisibleCharacterConfiguration: InvisibleCharacterConfiguration) {
+    init(lineFragment: LineFragment, invisibleCharacterConfiguration: InvisibleCharacterConfiguration, tabWidth: CGFloat) {
         self.lineFragment = lineFragment
-        self.renderer = LineFragmentRenderer(lineFragment: lineFragment, invisibleCharacterConfiguration: invisibleCharacterConfiguration)
+        self.renderer = LineFragmentRenderer(lineFragment: lineFragment, invisibleCharacterConfiguration: invisibleCharacterConfiguration, tabWidth: tabWidth)
         self.renderer.delegate = self
     }
 }

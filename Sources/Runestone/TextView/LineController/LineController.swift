@@ -351,7 +351,8 @@ private extension LineController {
         } else {
             let lineFragmentController = LineFragmentController(
                 lineFragment: lineFragment,
-                invisibleCharacterConfiguration: invisibleCharacterConfiguration
+                invisibleCharacterConfiguration: invisibleCharacterConfiguration,
+                tabWidth: tabWidth
             )
             lineFragmentController.delegate = self
             lineFragmentControllers[lineFragment.id] = lineFragmentController
