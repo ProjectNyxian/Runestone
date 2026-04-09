@@ -57,10 +57,14 @@ private extension LineMovementController {
         guard let line = lineManager.line(containingCharacterAt: location) else {
             return location
         }
-        guard let lineController = lineControllerStorage[line.id] else {
-            return location
-        }
+        
+        let lineController = lineControllerStorage.getOrCreateLineController(for: line)
         let lineLocalLocation = max(min(location - line.location, line.data.totalLength), 0)
+        
+        guard lineController.numberOfLineFragments > 0 else {
+            return locationForMovingUpwards(lineOffset: abs(lineOffset), fromLocation: 0, inLineFragmentAt: 0, of: line)
+        }
+        
         guard let lineFragmentNode = lineController.lineFragmentNode(containingCharacterAt: lineLocalLocation) else {
             return location
         }
