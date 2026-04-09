@@ -589,6 +589,17 @@ open class TextView: UIScrollView {
     public var findInteraction: UIFindInteraction? {
         textSearchingHelper.findInteraction
     }
+    
+    /// Automatically ensures the document always ends with a newline,
+    /// mirroring standard code expectation
+    public var ensuresTrailingNewline: Bool {
+        get {
+            textInputView.ensuresTrailingNewline
+        }
+        set {
+            textInputView.ensuresTrailingNewline = newValue
+        }
+    }
 
     private let textInputView: TextInputView
     private let editableTextInteraction = UITextInteraction(for: .editable)

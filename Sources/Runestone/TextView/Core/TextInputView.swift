@@ -107,6 +107,7 @@ public class TextInputView: UIView, UITextInput {
     public var keyboardType: UIKeyboardType = .default
     public var keyboardAppearance: UIKeyboardAppearance = .default
     public var returnKeyType: UIReturnKeyType = .default
+    public var ensuresTrailingNewline: Bool = true
     @objc var insertionPointColor: UIColor = .label {
         didSet {
             if insertionPointColor != oldValue {
@@ -1278,6 +1279,11 @@ extension TextInputView {
         let lineChangeSet = textEditResult.lineChangeSet
         let languageModeLineChangeSet = languageMode.textDidChange(textChange)
         lineChangeSet.union(with: languageModeLineChangeSet)
+        if ensuresTrailingNewline && newString != lineEndings.symbol {
+            if let trailingResult = textEditHelper.ensureTrailingNewline() {
+                lineChangeSet.union(with: trailingResult.lineChangeSet)
+            }
+        }
         applyLineChangesToLayoutManager(lineChangeSet)
         let updatedTextEditResult = TextEditResult(textChange: textChange, lineChangeSet: lineChangeSet)
         delegate?.textInputViewDidChange(self)

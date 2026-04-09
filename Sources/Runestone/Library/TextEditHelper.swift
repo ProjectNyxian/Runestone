@@ -56,4 +56,13 @@ final class TextEditHelper {
         }
         return mutableSubstring
     }
+    
+    @discardableResult
+    func ensureTrailingNewline() -> TextEditResult? {
+        guard !(stringView.string as String).hasSuffix(lineEndings.symbol) else {
+            return nil
+        }
+        let location = stringView.string.length
+        return replaceText(in: NSRange(location: location, length: 0), with: lineEndings.symbol)
+    }
 }
