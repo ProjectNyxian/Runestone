@@ -508,7 +508,7 @@ open class TextView: UIScrollView {
     /// The overscroll is a factor of the scrollable area height and will not take into account any insets. 0 means no overscroll and 1 means an amount equal to the height of the text view. Detaults to 0.
     public var verticalOverscrollFactor: CGFloat = 0 {
         didSet {
-            if horizontalOverscrollFactor != oldValue {
+            if verticalOverscrollFactor != oldValue {
                 hasPendingContentSizeUpdate = true
                 handleContentSizeUpdateIfNeeded()
             }
