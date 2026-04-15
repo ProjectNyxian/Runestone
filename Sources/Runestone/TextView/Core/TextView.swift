@@ -1165,11 +1165,13 @@ private extension TextView {
         if gestureRecognizer.state == .began {
             previousSelectedRangeDuringGestureHandling = selectedRange
         } else if gestureRecognizer.state == .changed, let previousSelectedRange = previousSelectedRangeDuringGestureHandling {
+            guard !isDecelerating else {
+                previousSelectedRangeDuringGestureHandling = selectedRange
+                return
+            }
             if selectedRange.lowerBound != previousSelectedRange.lowerBound {
-                // User is adjusting the lower bound (location) of the selected range.
                 scrollLocationToVisible(selectedRange.lowerBound)
             } else if selectedRange.upperBound != previousSelectedRange.upperBound {
-                // User is adjusting the upper bound (length) of the selected range.
                 scrollLocationToVisible(selectedRange.upperBound)
             }
             previousSelectedRangeDuringGestureHandling = selectedRange
@@ -1252,6 +1254,9 @@ private extension TextView {
         let rectMinY = min(lowerBoundRect.minY, upperBoundRect.minY)
         let rectMaxY = max(lowerBoundRect.maxY, upperBoundRect.maxY)
         let rect = CGRect(x: rectMinX, y: rectMinY, width: rectMaxX - rectMinX, height: rectMaxY - rectMinY)
+        if isDecelerating {
+            setContentOffset(contentOffset, animated: false)
+        }
         contentOffset = contentOffsetForScrollingToVisibleRect(rect)
     }
 
@@ -1305,7 +1310,7 @@ private extension TextView {
             // The end of the rectangle is not visible and the rect fits within the screen so we'll scroll to reveal the entire rect.
             newContentOffset.x += rect.maxX - viewport.maxX
         } else if rect.maxX > viewport.maxX {
-            newContentOffset.x += rect.minX
+            newContentOffset.x -= viewport.minX - rect.minX
         }
         if rect.minY < viewport.minY {
             newContentOffset.y -= viewport.minY - rect.minY
@@ -1313,7 +1318,7 @@ private extension TextView {
             // The end of the rectangle is not visible and the rect fits within the screen so we'll scroll to reveal the entire rect.
             newContentOffset.y += rect.maxY - viewport.maxY
         } else if rect.maxY > viewport.maxY {
-            newContentOffset.y += rect.minY
+            newContentOffset.y -= viewport.minY - rect.minY
         }
         let cappedXOffset = min(max(newContentOffset.x, minimumContentOffset.x), maximumContentOffset.x)
         let cappedYOffset = min(max(newContentOffset.y, minimumContentOffset.y), maximumContentOffset.y)
