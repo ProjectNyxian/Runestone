@@ -698,9 +698,20 @@ open class TextView: UIScrollView {
         textInputView.scrollViewWidth = frame.width
         textInputView.frame = CGRect(x: 0, y: 0, width: max(contentSize.width, frame.width), height: max(contentSize.height, frame.height))
         textInputView.viewport = CGRect(origin: contentOffset, size: frame.size)
+        
         bringSubviewToFront(textInputView.gutterContainerView)
-        if #available(iOS 26, *), let scrollPocketView {
-            bringSubviewToFront(scrollPocketView)
+        
+        if #available(iOS 27, *) {
+            let gutter = textInputView.gutterContainerView
+            if let frontIndex = subviews.firstIndex(of: gutter), frontIndex > 0 {
+                insertSubview(gutter, at: frontIndex - 2)
+            }
+        }
+        
+        if #unavailable(iOS 27) {
+            if #available(iOS 26, *), let scrollPocketView {
+                bringSubviewToFront(scrollPocketView)
+            }
         }
     }
 
