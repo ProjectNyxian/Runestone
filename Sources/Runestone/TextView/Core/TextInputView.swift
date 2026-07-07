@@ -475,7 +475,7 @@ public class TextInputView: UIView, UITextInput {
                 contentSizeService.scrollViewWidth = scrollViewWidth
                 layoutManager.scrollViewWidth = scrollViewWidth
                 if isLineWrappingEnabled {
-                    invalidateLines()
+                    invalidateLineFragments()
                 }
             }
         }
@@ -1014,6 +1014,16 @@ private extension TextInputView {
             lineController.kern = kern
             lineController.lineBreakMode = lineBreakMode
             lineController.invalidateSyntaxHighlighting()
+        }
+    }
+
+    private func invalidateLineFragments() {
+        for lineController in lineControllerStorage {
+            lineController.lineFragmentHeightMultiplier = lineHeightMultiplier
+            lineController.tabWidth = indentController.tabWidth
+            lineController.kern = kern
+            lineController.lineBreakMode = lineBreakMode
+            lineController.invalidateTypesetting()
         }
     }
 
